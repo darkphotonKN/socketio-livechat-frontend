@@ -1,5 +1,34 @@
 * {
   font-family: 'Oxygen', sans-serif;
+  padding: 0;
+  margin: 0;
+}
+
+.app {
+  width: 100%;
+  min-height: 100vh;
+  padding: 10px;
+}
+
+.nightmode {
+  background: #1a1a1a;
+  color: #ddd;
+}
+
+.options {
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+}
+.options-title {
+  margin-right: 10px;
+}
+.options-item {
+  margin: 0 10px;
+}
+
+hr {
+  margin: 5px 0;
 }
 
 h3 {
@@ -7,6 +36,23 @@ h3 {
   font-weight: 300;
 }
 
+.chat-area {
+  margin-top: 20px;
+}
+
+.chat-title {
+  font-weight: 700;
+  border-bottom: 1px solid #1a1a1a;
+  display: inline-block;
+}
+.nightmode .chat-title {
+  border-bottom: 1px solid #ddd;
+}
+
 .msg-item {
   margin: 20px 0;
+}
+
+.options label {
+  margin-right: 7px;
 }
