@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-// import { io } from 'socket.io-client';
+import { flushSync } from 'react-dom';
 import { io } from 'socket.io-client';
 
 import '../css/App.css';
@@ -9,7 +9,7 @@ import { CHAT_SERVER_URL } from '../env';
 const App: React.FC = () => {
   const [messages, setMessages] = useState<string[]>([]);
   const [nightmode, setNightMode] = useState<boolean>(false);
-  const msgRef = useRef<HTMLDivElement>();
+  const listRef = useRef<HTMLDivElement>(null);
 
   // setup socket.io server
   const connectChatServer = () => {
@@ -22,9 +22,23 @@ const App: React.FC = () => {
     const socket = connectChatServer();
     socket.onAny((message) => {
       // render message on dom on when recieving socket messages
+      // state here is not flushed so updated scroll here will not sync up with
+      // incoming new messages - it will scroll to the second last message
+      // instead of the last
+      // flushSync (imported from react-dom) helps make sure stuff written below
+      // will happen after dom update resulting from this state update
+      // flushSync(() => {
       setMessages((m) => [...m, message]);
+      // })
+      // scrolls to latest message to keep latest chat in view
+      scrollToLatestMsg();
     });
   }, []);
+
+  const scrollToLatestMsg = (): void => {
+    const lastChild = listRef.current!.lastElementChild;
+    lastChild?.scrollIntoView({ behavior: 'smooth' }); // scrolls last chat into view
+  };
 
   return (
     <div className={nightmode ? 'app nightmode' : 'app daymode'}>
@@ -42,7 +56,7 @@ const App: React.FC = () => {
         </div>
       </div>
       <hr />
-      <div className="chat-area">
+      <div className="chat-area" ref={listRef}>
         <div className="chat-title">Chat Area</div>
         {messages?.map((msg) => (
           <div className="msg-item">{msg}</div>
